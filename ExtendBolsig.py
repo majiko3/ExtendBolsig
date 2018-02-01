@@ -1,12 +1,13 @@
 
 # coding: utf-8
 
-# In[3]:
+# In[16]:
 
 
 import pandas as pd
+import os.path
 import subprocess
-subprocess.run(['jupyter', 'nbconvert', '--to', 'python', 'Extend_Bolsig.ipynb'])
+subprocess.run(['jupyter', 'nbconvert', '--to', 'python', 'ExtendBolsig.ipynb'])
 #import sys
 #sys.path.append('C:/Users/mtmr_member/Desktop/Scripts')
 from constants import *
@@ -18,6 +19,7 @@ class extendBolsig:
         self.fout_common = fout_common
         self.n_tot = P / (KB * T)
         
+        
     def read_fra(self, str1):
         df_ = pd.read_table(self.fout_common+'(U)_'+str1+'.dat', 
                             delim_whitespace=True, skiprows=3, 
@@ -25,6 +27,7 @@ class extendBolsig:
                             index_col='Temperature', engine='python')
         fra_ = df_['Density'][self.T] / self.n_tot
         return fra_, df_['Density'][self.T]
+    
     
     def set_fra(self):
         self.fra_sf6, self.den_sf6 = self.read_fra('sf6')
@@ -121,44 +124,52 @@ class extendBolsig:
     
     
     def read_k(self):
-        self.df_k = pd.read_table(self.fout_common+'_Rate_coefficient_'+str(int(self.T))+'K.dat', 
-                             delim_whitespace=True, skiprows=66, 
-                             engine='python',
-                             names=['R#', 'E/N', 'Energy', 
-                                    'k_sf6_i', 'k_sf6_a', 'k_sf6_da1', 'k_sf6_da2', 'k_sf6_da3', 'k_sf6_da4', 
-                                    'k_sf5_i', 'k_sf5_a', 
-                                    'k_sf4_i', 'k_sf4_a',
-                                    'k_sf3_i', 'k_sf3_a', 
-                                    'k_sf2_i', 
-                                    'k_sf_i', 
-                                    'k_s2_i', 
-                                    'k_s_i', 
-                                    'k_f2_i', 'k_f2_da', 
-                                    'k_f_i1', 'k_f_i2', 'k_f_i3', 'k_f_a', 
-                                    'k_ssf2_i', 'k_ssf2_a', 
-                                    'k_fssf_i', 'k_fssf_a',
-                                    'k_c_i', 
-                                    'k_c2_i', 
-                                    'k_c3_i', 
-                                    'k_cf_i', 'k_cf_da', 
-                                    'k_cf2_i', 'k_cf2_da',
-                                    'k_cf3_i', 
-                                    'k_cf4_da1', 'k_cf4_da2', 'k_cf4_i1', 'k_cf4_i2', 'k_cf4_i3', 'k_cf4_i4', 'k_cf4_i5', 'k_cf4_i6', 'k_cf4_i7', 
-                                    'k_c2f2_i', 'k_c2f2_da', 
-                                    'k_c2f4_i1', 'k_c2f4_i2', 'k_c2f4_i3', 
-                                    'k_c2f6_i1', 'k_c2f6_i2', 'k_c2f6_i3', 'k_c2f6_i4', 'k_c2f6_da1', 'k_c2f6_da2', 
-                                    'k_cs_i',
-                                    'k_cs2_i',
-                                    'k_n_i',
-                                    'k_n2_i',
-                                    'k_b_i',
-                                    'k_bf_i',
-                                    'k_bf2_i',
-                                    'k_bf3_i', 'k_bf3_da',
-                                    'k_cn_i'
- 
-                                   ]
-                             )
+        f_name = self.fout_common+'_Rate_coefficient_'+str(int(self.T))+'K.dat'
+        if os.path.exists(f_name) == True:
+            self.df_k = pd.read_table(f_name, 
+                                 delim_whitespace=True, skiprows=66, 
+                                 engine='python',
+                                 names=['R#', 'E/N', 'Energy', 
+                                        'k_sf6_i', 'k_sf6_a', 'k_sf6_da1', 'k_sf6_da2', 'k_sf6_da3', 'k_sf6_da4', 
+                                        'k_sf5_i', 'k_sf5_a', 
+                                        'k_sf4_i', 'k_sf4_a',
+                                        'k_sf3_i', 'k_sf3_a', 
+                                        'k_sf2_i', 
+                                        'k_sf_i', 
+                                        'k_s2_i', 
+                                        'k_s_i', 
+                                        'k_f2_i', 'k_f2_da', 
+                                        'k_f_i1', 'k_f_i2', 'k_f_i3', 'k_f_a', 
+                                        'k_ssf2_i', 'k_ssf2_a', 
+                                        'k_fssf_i', 'k_fssf_a',
+                                        'k_c_i', 
+                                        'k_c2_i', 
+                                        'k_c3_i', 
+                                        'k_cf_i', 'k_cf_da', 
+                                        'k_cf2_i', 'k_cf2_da',
+                                        'k_cf3_i', 
+                                        'k_cf4_da1', 'k_cf4_da2', 'k_cf4_i1', 'k_cf4_i2', 'k_cf4_i3', 'k_cf4_i4', 'k_cf4_i5', 'k_cf4_i6', 'k_cf4_i7', 
+                                        'k_c2f2_i', 'k_c2f2_da', 
+                                        'k_c2f4_i1', 'k_c2f4_i2', 'k_c2f4_i3', 
+                                        'k_c2f6_i1', 'k_c2f6_i2', 'k_c2f6_i3', 'k_c2f6_i4', 'k_c2f6_da1', 'k_c2f6_da2', 
+                                        'k_cs_i',
+                                        'k_cs2_i',
+                                        'k_n_i',
+                                        'k_n2_i',
+                                        'k_b_i',
+                                        'k_bf_i',
+                                        'k_bf2_i',
+                                        'k_bf3_i', 'k_bf3_da',
+                                        'k_cn_i'
+
+                                       ]
+                                 )
+        else:
+            f = open(f_name, 'w', errors='replace')
+            f.close()
+            print('エラーするけど気にしない')
+            self.set_muE()
+    
     
     def set_tau(self):
         self.df_tau = pd.DataFrame({'E/N': self.df_k['E/N'],
@@ -261,14 +272,21 @@ class extendBolsig:
                                               'tau_cn_i']
                                   )
         
+        
     def write_tau(self):
         self.df_tau.to_csv(self.fout_common+'_Collision_frequency_'+str(int(self.T))+'K.csv')
         self.df_tau.to_csv(self.fout_common+'_Collision_frequency_'+str(int(self.T))+'K.dat', sep='\t')
         
+        
     def set_muE(self):
-        self.df_tran = pd.read_table(self.fout_common+'_Transport_coefficient_'+str(int(self.T))+'K.dat', 
-                                     delim_whitespace=True, skiprows=22, 
-                                     engine='python', header=None)
+        f_name = self.fout_common+'_Transport_coefficient_'+str(int(self.T))+'K.dat'
+        if os.path.exists(f_name) == True:
+            self.df_tran = pd.read_table(f_name, 
+                                         delim_whitespace=True, skiprows=22, 
+                                         engine='python', header=None)
+        else:
+            f = open(f_name, 'w', errors='replace')
+            f.close()
         
         self.df_muE = pd.DataFrame({ 'E/N': self.df_tran[1],
                                      'mu*N': self.df_tran[3],
@@ -383,6 +401,7 @@ class extendBolsig:
         self.df_alpha_eta.to_csv(self.fout_common+'_Ionization_and_Attachment_'+str(int(self.T))+'K.csv')
         self.df_alpha_eta.to_csv(self.fout_common+'_Ionization_and_Attachment_'+str(int(self.T))+'K.dat', sep='\t')
 
+        
     def set_total_alpha_eta(self):
         self.df_total_alpha_eta = pd.DataFrame({'E/N': self.df_alpha_eta['E/N'],
                                                 'Total alpha': 
@@ -476,6 +495,36 @@ class extendBolsig:
                 Ecr_Vm = Ecr_Td * self.n_tot * 1.0e-21
                 break
         return Ecr_Td, Ecr_Vm
+    
+    
+    def read_write(self, start_str, end_str, file_mode, fout_name):
+        """
+        file_mode: 1:_01.dat, 2~:_02.dat
+        """
+        if file_mode == 1:
+            f = open(self.fout_common+'_'+str(int(self.T))+'K_01.dat', 'r')
+        else:
+            f = open(self.fout_common+'_'+str(int(self.T))+'K_02.dat', 'r')
+            
+        fout = open(fout_name, 'w')    
+        line = f.readline()
+        signal = 0
+        while line:
+            if line == start_str:
+                signal = 1
+            elif line == end_str:
+                signal = 0
+                break
+                
+            if signal == 1:
+                fout.write(line)
+                line = f.readline()
+            else:
+                line = f.readline()      
+                
+        f.close()
+        fout.close()
+        
     
 if __name__ == '__main__':
     print('Yes!')

@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[11]:
+# In[1]:
 
 
 #coding: utf-8
@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 #import sys
 #sys.path.append('C:/Users/mtmr_member/Desktop/Scripts')
-import Extend_Bolsig
+import ExtendBolsig
 import subprocess
 subprocess.run(['jupyter', 'nbconvert', '--to', 'python', 'main.ipynb'])
 
@@ -25,11 +25,24 @@ fout_change = input('>> ')
 f_dir = 'C:/Users/mtmr_member/Desktop/06sf6c2f4bn(m)' + fout_change + '/'
 fout_common = f_dir + '06sf6c2f4bn(m)' + fout_change
 
-eB = Extend_Bolsig.extendBolsig(T, fout_common)
+eB = ExtendBolsig.extendBolsig(T, fout_common)
 
 #順番注意
 eB.set_fra()
 eB.write_fra()
+
+eB.read_write('R50 \n', 'R51 \n', 1, 
+             fout_common+'_Eectron_energy_'+str(int(T))+'K_100Td.dat')
+eB.read_write('R100\n', 'R101\n', 1, 
+             fout_common+'_Eectron_energy_'+str(int(T))+'K_200Td.dat')
+eB.read_write('R200\n', 'R201\n', 1, 
+             fout_common+'_Eectron_energy_'+str(int(T))+'K_400Td.dat')
+
+eB.read_write(' Transport coefficients\n', 'Rate coefficients (m3/s)\n', 2, 
+             fout_common+'_Transport_coefficient_'+str(int(T))+'K.dat')
+eB.read_write('Rate coefficients (m3/s)\n', 'Inverse rate coefficients (m3/s)\n', 2, 
+             fout_common+'_Rate_coefficient_'+str(int(T))+'K.dat')
+
 eB.read_k()
 eB.set_tau()
 eB.write_tau()
